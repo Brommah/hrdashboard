@@ -72,8 +72,7 @@ export function WeeklyKPIsTab({ candidates, weeklyTrends }: WeeklyKPIsTabProps) 
 
     // Role breakdown
     const roleBreakdown = weekCandidates.reduce((acc: any, candidate) => {
-      const role = candidate.role;
-      if (!role) return acc; // Skip candidates without roles
+      const role = candidate.jobRole || candidate.role || 'No Role';
       if (!acc[role]) {
         acc[role] = { leads: 0, qualityLeads: 0, qualityCandidates: 0, hires: 0 };
       }

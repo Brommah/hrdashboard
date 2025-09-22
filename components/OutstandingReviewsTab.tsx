@@ -84,8 +84,7 @@ export function OutstandingReviewsTab({ candidates }: OutstandingReviewsTabProps
 
   // Group pending human reviews by role/manager with sorting
   const pendingByManager = reviewCategories.pendingHumanReview.reduce((acc: any, candidate) => {
-    const role = candidate.jobRole || candidate.role;
-    if (!role) return acc; // Skip candidates without roles
+    const role = candidate.jobRole || candidate.role || 'No Role';
     const manager = roleToManager[role as keyof typeof roleToManager] || 'Unassigned';
     
     if (!acc[manager]) {

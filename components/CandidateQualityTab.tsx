@@ -83,8 +83,7 @@ export function CandidateQualityTab({ candidates, weeklyTrends }: CandidateQuali
 
   // Quality by role
   const roleQuality = candidates.reduce((acc: any, candidate) => {
-    const role = candidate.role;
-    if (!role) return acc; // Skip candidates without roles
+    const role = candidate.jobRole || candidate.role || 'No Role';
     
     if (!acc[role]) {
       acc[role] = {

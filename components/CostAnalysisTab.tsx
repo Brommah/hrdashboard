@@ -88,8 +88,7 @@ export function CostAnalysisTab({ candidates }: CostAnalysisTabProps) {
 
   // Role-based cost analysis
   const roleAnalysis = candidates.reduce((acc: any, candidate) => {
-    const role = candidate.role;
-    if (!role) return acc; // Skip candidates without roles
+    const role = candidate.jobRole || candidate.role || 'No Role';
     
     if (!acc[role]) {
       acc[role] = {

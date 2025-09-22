@@ -25,10 +25,20 @@ interface RolePerformanceTabProps {
  * Role Performance tab showing analytics by job role (AI Engineer, AI Innovator, PSE, FA)
  */
 export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformanceTabProps) {
+  // Debug: Check what role values we actually have
+  console.log('Role field sample:', candidates.slice(0, 10).map(c => ({ 
+    name: c.name, 
+    role: c.role, 
+    jobRole: c.jobRole,
+    aiScore: c.aiScore,
+    humanScore: c.humanScore 
+  })));
+
   // Process candidates by role
   const roleAnalysis = candidates.reduce((acc: any, candidate) => {
-    const role = candidate.role;
-    if (!role) return acc; // Skip candidates without roles
+    const role = candidate.jobRole || candidate.role || 'No Role';
+    
+    // Don't skip - we need to see all data
     
     if (!acc[role]) {
       acc[role] = {
