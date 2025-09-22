@@ -40,6 +40,8 @@ export function CostAnalysisTab({ candidates }: CostAnalysisTabProps) {
   const sourceAnalysis = candidates.reduce((acc: any, candidate) => {
     const source = normalizeSource(candidate.source);
     
+    if (!source) return acc; // Skip candidates without valid sources
+    
     if (!acc[source]) {
       acc[source] = {
         source,
@@ -111,9 +113,11 @@ export function CostAnalysisTab({ candidates }: CostAnalysisTabProps) {
     
     // Estimate cost based on source
     const source = normalizeSource(candidate.source);
-    const sourceCost = sourceCosts[source];
-    if (sourceCost) {
-      acc[role].estimatedCost += (sourceCost.monthly + sourceCost.setup) / 30; // Daily cost
+    if (source) {
+      const sourceCost = sourceCosts[source];
+      if (sourceCost) {
+        acc[role].estimatedCost += (sourceCost.monthly + sourceCost.setup) / 30; // Daily cost
+      }
     }
     
     return acc;
@@ -126,7 +130,7 @@ export function CostAnalysisTab({ candidates }: CostAnalysisTabProps) {
     costPerHire: role.hires > 0 ? role.estimatedCost / role.hires : 0,
   }));
 
-  function normalizeSource(source: string): string {
+  function normalizeSource(source: string): string | null {
     if (!source) return null;
     const normalized = source.toLowerCase();
     
