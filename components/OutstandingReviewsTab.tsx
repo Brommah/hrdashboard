@@ -32,19 +32,19 @@ interface OutstandingReviewsTabProps {
 export function OutstandingReviewsTab({ candidates }: OutstandingReviewsTabProps) {
   const [sortBy, setSortBy] = useState<'aiScore' | 'date'>('aiScore');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedManagers, setSelectedManagers] = useState<string[]>(['Sergey', 'Ulad', 'Lynn']);
+  const [selectedManagers, setSelectedManagers] = useState<string[]>(['Martijn', 'Sergey', 'Ulad', 'Lynn']);
 
   // Role to Hiring Manager mapping
   const roleToManager = {
-    'AI Engineer': 'Sergey',
+    'AI Engineer': 'Martijn',
     'AI Innovator': 'Sergey', 
+    'Principal Fullstack Engineer': 'Ulad',
     'Founder\'s Associate': 'Lynn',
-    'PSE': 'Ulad',
-    'Principal Fullstack Engineer': 'Sergey',
-    'Operations Generalist': 'Lynn'
+    'Operations Generalist': 'Lynn',
+    'PSE': 'Ulad'
   };
 
-  const allManagers = ['Sergey', 'Ulad', 'Lynn'];
+  const allManagers = ['Martijn', 'Sergey', 'Ulad', 'Lynn'];
 
   const toggleManager = (manager: string) => {
     setSelectedManagers(prev => 

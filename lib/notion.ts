@@ -194,7 +194,7 @@ export function calculateWeeklyTrends(candidates: Candidate[]) {
 
   // Generate exactly 4 weeks of buckets (most recent 4 weeks)
   const today = new Date();
-  const weekBuckets = [];
+  const weekBuckets: any[] = [];
   
   for (let i = 3; i >= 0; i--) {
     const weekStart = new Date(today);
@@ -256,14 +256,14 @@ export function calculateWeeklyTrends(candidates: Candidate[]) {
       date: bucket.weekStart,
       totalCandidates: allCandidates.length, // All candidates for volume
       scoredCandidates: scoredCandidates.length, // Candidates with both scores
-      averageDiscrepancy: discrepancies.length > 0 ? discrepancies.reduce((sum, d) => sum + d, 0) / discrepancies.length : 0,
-      averageAbsoluteDiscrepancy: absDiscrepancies.length > 0 ? absDiscrepancies.reduce((sum, d) => sum + d, 0) / absDiscrepancies.length : 0,
-      aiHigherCount: discrepancies.filter(d => d > 0).length,
-      humanHigherCount: discrepancies.filter(d => d < 0).length,
-      equalCount: discrepancies.filter(d => d === 0).length,
+      averageDiscrepancy: discrepancies.length > 0 ? discrepancies.reduce((sum: number, d: number) => sum + d, 0) / discrepancies.length : 0,
+      averageAbsoluteDiscrepancy: absDiscrepancies.length > 0 ? absDiscrepancies.reduce((sum: number, d: number) => sum + d, 0) / absDiscrepancies.length : 0,
+      aiHigherCount: discrepancies.filter((d: number) => d > 0).length,
+      humanHigherCount: discrepancies.filter((d: number) => d < 0).length,
+      equalCount: discrepancies.filter((d: number) => d === 0).length,
       maxDiscrepancy: discrepancies.length > 0 ? Math.max(...discrepancies) : 0,
       minDiscrepancy: discrepancies.length > 0 ? Math.min(...discrepancies) : 0,
-      aiAccuracy: discrepancies.length > 0 ? discrepancies.filter(d => Math.abs(d) <= 1).length / discrepancies.length * 100 : 0, // Within 1 point
+      aiAccuracy: discrepancies.length > 0 ? discrepancies.filter((d: number) => Math.abs(d) <= 1).length / discrepancies.length * 100 : 0, // Within 1 point
     };
   });
 

@@ -2,7 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Users, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
-import { candidateFilters, getRoleName } from '@/lib/candidateFilters';
+// Simple role name getter
+const getRoleName = (candidate: Candidate): string => {
+  return candidate.jobRole || candidate.role || 'No Role';
+};
 
 interface Candidate {
   id: string;
@@ -27,12 +30,16 @@ interface HomeTabProps {
  * Executive Summary - Simple, reliable metrics for CEO dashboard
  */
 export function HomeTab({ candidates }: HomeTabProps) {
-  // Use consistent filtering (excludes candidates without sources)
-  const validCandidates = candidateFilters.valid(candidates);
-  const aiProcessed = candidateFilters.withAiScore(validCandidates);
-  const fullyReviewed = candidateFilters.fullyReviewed(validCandidates);
-  const pendingReviews = candidateFilters.pendingHumanReview(validCandidates);
-  const highDiscrepancy = candidateFilters.highDiscrepancy(validCandidates);
+  // Simple filtering (excludes candidates without sources)
+  const validCandidates = candidates.filter(c => 
+    c.name && c.dateAdded && (c.jobRole || c.role) && c.source && c.source.trim() !== ''
+  );
+  const aiProcessed = validCandidates.filter(c => c.aiScore > 0);
+  const fullyReviewed = validCandidates.filter(c => c.aiScore > 0 && c.humanScore > 0);
+  const pendingReviews = validCandidates.filter(c => c.aiScore >= 5 && c.humanScore === 0);
+  const highDiscrepancy = validCandidates.filter(c => 
+    c.aiScore > 0 && c.humanScore > 0 && Math.abs(c.aiScore - c.humanScore) >= 3
+  );
 
   // Simple, reliable metrics
   const metrics = {

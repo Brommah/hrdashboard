@@ -9,6 +9,7 @@ interface Candidate {
   name: string;
   source: string;
   role: string;
+  jobRole: string;
   aiScore: number;
   humanScore: number;
   dateAdded: string;

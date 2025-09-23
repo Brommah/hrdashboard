@@ -10,6 +10,7 @@ interface Candidate {
   id: string;
   name: string;
   role: string;
+  jobRole: string;
   aiScore: number;
   humanScore: number;
   dateAdded: string;

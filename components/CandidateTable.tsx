@@ -10,6 +10,7 @@ interface Candidate {
   humanScore: number;
   status: string;
   role: string;
+  jobRole: string;
   source: string;
   dateAdded: string;
 }

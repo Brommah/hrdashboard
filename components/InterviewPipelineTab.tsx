@@ -9,6 +9,7 @@ interface Candidate {
   id: string;
   name: string;
   role: string;
+  jobRole: string;
   exploratoryCall?: string;
   techInterview?: string;
   ceoInterview?: string;
