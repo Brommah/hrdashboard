@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Users, AlertTriangle } from 'lucide-react';
+import { candidateFilters } from '@/lib/candidateFilters';
 
 interface MetricsCardsProps {
   scoreAnalysis: {

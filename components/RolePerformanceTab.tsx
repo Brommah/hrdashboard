@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Badge } from '@/components/ui/badge';
 import { Briefcase, TrendingUp, Users, Award } from 'lucide-react';
+import { candidateFilters, getRoleName } from '@/lib/candidateFilters';
 
 interface Candidate {
   id: string;
@@ -70,10 +71,12 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
     
     if (candidate.aiScore > 0) {
       acc[role].aiScoreSum += candidate.aiScore;
+      acc[role].aiProcessedCount = (acc[role].aiProcessedCount || 0) + 1;
     }
     
     if (candidate.humanScore > 0) {
       acc[role].humanScoreSum += candidate.humanScore;
+      acc[role].humanProcessedCount = (acc[role].humanProcessedCount || 0) + 1;
     }
     
     if (candidate.aiScore > 0 && candidate.humanScore > 0) {
@@ -84,13 +87,18 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
     return acc;
   }, {});
 
-  // Calculate averages and format data
+  // Calculate averages correctly
   const roleData = Object.values(roleAnalysis).map((role: any) => ({
     ...role,
-    avgAiScore: role.totalCandidates > 0 ? (role.aiScoreSum / role.totalCandidates) : 0,
-    avgHumanScore: role.withBothScores > 0 ? (role.humanScoreSum / role.withBothScores) : 0,
+    // AI average should be based on candidates who actually have AI scores
+    avgAiScore: (role.aiProcessedCount || 0) > 0 ? (role.aiScoreSum / role.aiProcessedCount) : 0,
+    // Human average should be based on candidates who actually have human scores  
+    avgHumanScore: (role.humanProcessedCount || 0) > 0 ? (role.humanScoreSum / role.humanProcessedCount) : 0,
+    // Discrepancy average based on candidates with both scores
     avgDiscrepancy: role.withBothScores > 0 ? (role.discrepancySum / role.withBothScores) : 0,
-    conversionRate: role.totalCandidates > 0 ? (role.withBothScores / role.totalCandidates * 100) : 0,
+    // Show both scores count instead of conversion rate
+    bothScoresCount: role.withBothScores,
+    aiProcessedCount: role.aiProcessedCount || 0,
     topSource: Object.entries(role.sources).sort(([,a]: any, [,b]: any) => b - a)[0]?.[0] || 'No Data',
   })).sort((a, b) => b.totalCandidates - a.totalCandidates);
 
@@ -271,10 +279,10 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                 <tr className="border-b">
                   <th className="text-left p-3 font-medium">Role</th>
                   <th className="text-left p-3 font-medium">Total</th>
-                  <th className="text-left p-3 font-medium">Both Scores</th>
+                  <th className="text-left p-3 font-medium">AI Processed</th>
                   <th className="text-left p-3 font-medium">Avg AI Score</th>
+                  <th className="text-left p-3 font-medium">Fully Reviewed</th>
                   <th className="text-left p-3 font-medium">Avg Human Score</th>
-                  <th className="text-left p-3 font-medium">Discrepancy</th>
                   <th className="text-left p-3 font-medium">Top Source</th>
                   <th className="text-left p-3 font-medium">Status Breakdown</th>
                 </tr>
@@ -291,7 +299,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                     <td className="p-3 font-medium">{role.totalCandidates}</td>
                     <td className="p-3">
                       <span className="text-sm text-gray-600">
-                        {role.withBothScores} ({role.conversionRate.toFixed(1)}%)
+                        {role.aiProcessedCount} ({role.totalCandidates > 0 ? (role.aiProcessedCount / role.totalCandidates * 100).toFixed(1) : 0}%)
                       </span>
                     </td>
                     <td className="p-3">
@@ -300,6 +308,11 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                         role.avgAiScore >= 5 ? 'text-yellow-600' : 'text-red-600'
                       }`}>
                         {role.avgAiScore.toFixed(1)}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <span className="text-sm text-gray-600">
+                        {role.bothScoresCount}
                       </span>
                     </td>
                     <td className="p-3">
