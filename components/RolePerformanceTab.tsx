@@ -46,6 +46,8 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
         role,
         totalCandidates: 0,
         withBothScores: 0,
+        aiProcessedCount: 0,
+        humanProcessedCount: 0,
         avgAiScore: 0,
         avgHumanScore: 0,
         avgDiscrepancy: 0,
@@ -179,7 +181,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Both Scores:</span>
-                  <span className="font-medium">{role.withBothScores}</span>
+                  <span className="font-medium">{role.bothScoresCount}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Top Source:</span>
@@ -329,7 +331,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                         Math.abs(role.avgDiscrepancy) <= 0.5 ? 'text-green-600' :
                         Math.abs(role.avgDiscrepancy) <= 1.5 ? 'text-yellow-600' : 'text-red-600'
                       }`}>
-                        {role.withBothScores > 0 ? 
+                        {role.bothScoresCount > 0 ? 
                           `${role.avgDiscrepancy > 0 ? '+' : ''}${role.avgDiscrepancy.toFixed(2)}` : 
                           'N/A'
                         }
@@ -430,7 +432,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
           <CardContent>
             {(() => {
               const bestAlignmentRole = roleData
-                .filter(r => r.withBothScores > 0)
+                .filter(r => r.bothScoresCount > 0)
                 .sort((a, b) => Math.abs(a.avgDiscrepancy) - Math.abs(b.avgDiscrepancy))[0];
               
               return bestAlignmentRole ? (
@@ -443,7 +445,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                   </div>
                   <p className="text-xs text-gray-500">Avg discrepancy (lower is better)</p>
                   <p className="text-sm text-gray-600">
-                    {bestAlignmentRole.withBothScores} candidates with both scores
+                    {bestAlignmentRole.bothScoresCount} candidates with both scores
                   </p>
                 </div>
               ) : (
@@ -474,7 +476,7 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
                       <div>
                         <div className="font-medium">{role.role}</div>
                         <div className="text-sm text-gray-600">
-                          {role.withBothScores} with both scores ({role.conversionRate.toFixed(1)}%)
+                          {role.bothScoresCount} fully reviewed ({role.humanReviewRate.toFixed(1)}%)
                         </div>
                       </div>
                     </div>
