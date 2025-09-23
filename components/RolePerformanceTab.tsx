@@ -98,6 +98,9 @@ export function RolePerformanceTab({ candidates, weeklyTrends }: RolePerformance
     avgHumanScore: (role.humanProcessedCount || 0) > 0 ? (role.humanScoreSum / role.humanProcessedCount) : 0,
     // Discrepancy average based on candidates with both scores
     avgDiscrepancy: role.withBothScores > 0 ? (role.discrepancySum / role.withBothScores) : 0,
+    // Processing rates
+    aiProcessingRate: role.totalCandidates > 0 ? (role.aiProcessedCount / role.totalCandidates * 100) : 0,
+    humanReviewRate: (role.aiProcessedCount || 0) > 0 ? (role.withBothScores / role.aiProcessedCount * 100) : 0,
     // Show both scores count instead of conversion rate
     bothScoresCount: role.withBothScores,
     aiProcessedCount: role.aiProcessedCount || 0,
