@@ -27,12 +27,12 @@ interface HomeTabProps {
  * Executive Summary - Simple, reliable metrics for CEO dashboard
  */
 export function HomeTab({ candidates }: HomeTabProps) {
-  // Use consistent filtering
+  // Use consistent filtering (excludes candidates without sources)
   const validCandidates = candidateFilters.valid(candidates);
-  const aiProcessed = candidateFilters.withAiScore(candidates);
-  const fullyReviewed = candidateFilters.fullyReviewed(candidates);
-  const pendingReviews = candidateFilters.pendingHumanReview(candidates);
-  const highDiscrepancy = candidateFilters.highDiscrepancy(candidates);
+  const aiProcessed = candidateFilters.withAiScore(validCandidates);
+  const fullyReviewed = candidateFilters.fullyReviewed(validCandidates);
+  const pendingReviews = candidateFilters.pendingHumanReview(validCandidates);
+  const highDiscrepancy = candidateFilters.highDiscrepancy(validCandidates);
 
   // Simple, reliable metrics
   const metrics = {
@@ -52,7 +52,7 @@ export function HomeTab({ candidates }: HomeTabProps) {
     avgDiscrepancy: fullyReviewed.length > 0 ? fullyReviewed.reduce((sum, c) => sum + Math.abs(c.aiScore - c.humanScore), 0) / fullyReviewed.length : 0,
   };
 
-  // Role breakdown
+  // Role breakdown (only valid candidates with sources)
   const roleBreakdown = validCandidates.reduce((acc: any, candidate) => {
     const role = getRoleName(candidate);
     if (!acc[role]) {

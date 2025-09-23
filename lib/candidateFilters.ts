@@ -48,7 +48,8 @@ export const candidateFilters = {
     candidates.filter(c => 
       c.name && 
       c.dateAdded && 
-      (c.jobRole || c.role)
+      (c.jobRole || c.role) &&
+      c.source && c.source.trim() !== ''
     ),
 
   /**
